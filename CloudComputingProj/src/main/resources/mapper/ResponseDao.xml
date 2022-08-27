@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cloudComputingProj.dao.ResponseDao">
+
+    <resultMap id="BaseResultMap" type="com.example.cloudComputingProj.entity.Response">
+        <!--@Table response-->
+        <result property="responseid" column="responseid" jdbcType="VARCHAR"/>
+        <result property="userid" column="userid" jdbcType="VARCHAR"/>
+        <result property="response" column="response" jdbcType="VARCHAR"/>
+        <result property="responsetime" column="responsetime" jdbcType="TIMESTAMP"/>
+        <result property="responseuserid" column="responseuserid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          responseid, userid, response, responsetime, responseuserid
+        from project_test.response
+        where responseid = #{responseid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          responseid, userid, response, responsetime, responseuserid
+        from project_test.response
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          responseid, userid, response, responsetime, responseuserid
+        from project_test.response
+        <where>
+            <if test="responseid != null and responseid != ''">
+                and responseid = #{responseid}
+            </if>
+            <if test="userid != null and userid != ''">
+                and userid = #{userid}
+            </if>
+            <if test="response != null and response != ''">
+                and response = #{response}
+            </if>
+            <if test="responsetime != null">
+                and responsetime = #{responsetime}
+            </if>
+            <if test="responseuserid != null and responseuserid != ''">
+                and responseuserid = #{responseuserid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="responseid" useGeneratedKeys="true">
+        insert into project_test.response(userid, response, responsetime, responseuserid)
+        values (#{userid}, #{response}, #{responsetime}, #{responseuserid})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update project_test.response
+        <set>
+            <if test="userid != null and userid != ''">
+                userid = #{userid},
+            </if>
+            <if test="response != null and response != ''">
+                response = #{response},
+            </if>
+            <if test="responsetime != null">
+                responsetime = #{responsetime},
+            </if>
+            <if test="responseuserid != null and responseuserid != ''">
+                responseuserid = #{responseuserid},
+            </if>
+        </set>
+        where responseid = #{responseid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from project_test.response where responseid = #{responseid}
+    </delete>
+
+</mapper>

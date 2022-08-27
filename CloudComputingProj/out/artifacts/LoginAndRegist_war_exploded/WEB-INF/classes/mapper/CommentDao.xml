@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cloudComputingProj.dao.CommentDao">
+
+    <resultMap id="BaseResultMap" type="com.example.cloudComputingProj.entity.Comment">
+        <!--@Table comment-->
+        <result property="comentid" column="comentid" jdbcType="VARCHAR"/>
+        <result property="postid" column="postid" jdbcType="VARCHAR"/>
+        <result property="userid" column="userid" jdbcType="VARCHAR"/>
+        <result property="comment" column="comment" jdbcType="VARCHAR"/>
+        <result property="commenttime" column="commenttime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          comentid, postid, userid, comment, commenttime
+        from project_test.comment
+        where comentid = #{comentid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          comentid, postid, userid, comment, commenttime
+        from project_test.comment
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          comentid, postid, userid, comment, commenttime
+        from project_test.comment
+        <where>
+            <if test="comentid != null and comentid != ''">
+                and comentid = #{comentid}
+            </if>
+            <if test="postid != null and postid != ''">
+                and postid = #{postid}
+            </if>
+            <if test="userid != null and userid != ''">
+                and userid = #{userid}
+            </if>
+            <if test="comment != null and comment != ''">
+                and comment = #{comment}
+            </if>
+            <if test="commenttime != null">
+                and commenttime = #{commenttime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="comentid" useGeneratedKeys="true">
+        insert into project_test.comment(postid, userid, comment, commenttime)
+        values (#{postid}, #{userid}, #{comment}, #{commenttime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update project_test.comment
+        <set>
+            <if test="postid != null and postid != ''">
+                postid = #{postid},
+            </if>
+            <if test="userid != null and userid != ''">
+                userid = #{userid},
+            </if>
+            <if test="comment != null and comment != ''">
+                comment = #{comment},
+            </if>
+            <if test="commenttime != null">
+                commenttime = #{commenttime},
+            </if>
+        </set>
+        where comentid = #{comentid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from project_test.comment where comentid = #{comentid}
+    </delete>
+
+</mapper>
